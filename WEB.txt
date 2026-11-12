@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoalNow</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #10151d;
+    color: white;
+}
+
+header {
+    background: #172333;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 {
+    color: #45e58b;
+    margin: 0;
+}
+
+nav button, button {
+    background: #26384c;
+    color: white;
+    border: 0;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background: #397b60;
+}
+
+main {
+    padding: 25px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+h2 {
+    color: #45e58b;
+}
+
+.panel {
+    background: #192533;
+    padding: 18px;
+    margin: 12px 0;
+    border-radius: 12px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #344456;
+    padding: 10px 0;
+}
+
+.favorite {
+    background: #e5a72d;
+    color: #171717;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 1px solid #344456;
+}
+
+th {
+    color: #45e58b;
+}
+
+.small {
+    color: #aab7c5;
+    font-size: 13px;
+}
+
+footer {
+    text-align: center;
+    color: #aab7c5;
+    padding: 30px;
+}
+.sport-button {
+    font-size: 28px;
+    font-weight: bold;
+    padding: 22px 30px;
+    min-width: 220px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚽ GOALNOW</h1>
+    <nav>
+        <button onclick="inicio()">Inicio</button>
+        <button onclick="verFavoritos()">⭐ Favoritos</button>
+    </nav>
+</header>
+
+<main>
+    <div id="contenido"></div>
+</main>
+
+<footer>
+    GOALNOW · Todos los deportes en un solo lugar
+</footer>
+
+<script>
+
+// DEPORTES Y COMPETICIONES
+
+const deportes = {
+    "Fútbol": [
+        "LaLiga",
+        "Premier League",
+        "Serie A",
+        "Bundesliga",
+        "Ligue 1",
+        "Champions League",
+        "Europa League",
+        "Liga Española Femenina"
+    ],
+
+    "Baloncesto": [
+        "NBA",
+        "Euroliga",
+        "ACB",
+        "WNBA"
+    ],
+
+    "Tenis": [
+        "ATP",
+        "WTA",
+        "Wimbledon",
+        "Roland Garros",
+        "US Open"
+    ],
+
+    "Voleibol": [
+        "Liga de Naciones",
+        "Superliga"
+    ],
+
+    "Balonmano": [
+        "Liga ASOBAL",
+        "Champions de Balonmano"
+    ],
+
+    "Hockey": [
+        "NHL",
+        "Euro Hockey League"
+    ],
+
+    "Rugby": [
+        "Six Nations",
+        "Rugby Championship"
+    ],
+
+    "Béisbol": [
+        "MLB",
+        "World Baseball Classic"
+    ],
+
+    "Fórmula 1": [
+        "Campeonato de Pilotos",
+        "Campeonato de Constructores"
+    ],
+
+    "Ciclismo": [
+        "Tour de Francia",
+        "Giro de Italia",
+        "Vuelta a España"
+    ],
+
+    "Críquet": [
+        "Indian Premier League",
+        "Cricket World Cup"
+    ],
+
+    "Atletismo": [
+        "Diamond League",
+        "Campeonatos Mundiales"
+    ],
+
+    "Natación": [
+        "Campeonato Mundial",
+        "Campeonato Europeo"
+    ],
+
+    "Boxeo": [
+        "Campeonatos Mundiales",
+        "Grandes combates"
+    ]
+};
+
+
+// EQUIPOS DE EJEMPLO PARA LAS CLASIFICACIONES
+
+const equipos = {
+    "LaLiga": ["Barcelona", "Real Madrid", "Atlétic de Madrid", "Betis ", "Real Societat", "Sevilla", "Athletic", "Villareal", "Deportivo de la Coruña", "Racing de Santander", "Celta", " Alavés", "Espanyol", "Rayo de Vallecano", "Getafe", "Osasuna", "Llevant", "Elx", "Valencia", "Málaga"],
+    "Premier League": ["Arsenal", "Brighton", "Manchester City", "Liverpool", "Chelsea", "Everton", "Bournemoth", "Brentford", "Leeds", "Aston Vila", "Spurs", "Newcastle", "Hull", "Ipswich Town", "Fulham", "Nottingham Forest", "Coventry", "Manchester United", "Sunderland", "
+Crystal Palace"],
+    "Serie A": ["Lazio", "Inter Milan", "AS Roma", "AC Milan", "Como"],
+    "Bundesliga": ["Bayern Múnich", "Borussia Dortmund", "Leverkusen", "Leipzig"],
+    "Ligue 1": ["PSG", "Marsella", "Lyon", "Mónaco"],
+    "NBA": ["Lakers", "Celtics", "Warriors", "Bulls", "Heat"],
+    "Euroliga": ["Real Madrid", "Barcelona", "Olympiacos", "Fenerbahçe"],
+    "ACB": ["Real Madrid", "Barcelona", "Valencia Basket", "Unicaja"],
+    "WNBA": ["Las Vegas Aces", "New York Liberty", "Indiana Fever"],
+    "Liga ASOBAL": ["Barcelona", "Granollers", "Bidasoa", "Ademar León"],
+    "NHL": ["Florida Panthers", "Edmonton Oilers", "Boston Bruins"],
+    "MLB": ["Yankees", "Dodgers", "Red Sox"],
+    "Liga de Naciones": ["Italia", "Brasil", "Polonia", "Japón"]
+};
+
+
+// GUARDAR FAVORITOS EN ESTE ORDENADOR
+
+let ligaActual = "";
+let favoritos = JSON.parse(localStorage.getItem("goalnowFavoritos")) || [];
+
+function guardarFavoritos() {    localStorage.setItem(
+        "goalnowFavoritos",
+        JSON.stringify(favoritos)
+    );
+}
+
+
+// PANTALLA DE INICIO
+
+function inicio() {
+    let html = `
+        <h2>Todos los deportes</h2>
+        <p>Elige un deporte para descubrir sus competiciones.</p>
+    `;
+
+    for (let deporte in deportes) {
+        html += `
+            <button class="sport-button" onclick="mostrarLigas('${deporte}')">
+                ${deporte}
+            </button>
+        `;
+    }
+
+    document.getElementById("contenido").innerHTML = html;
+}
+
+
+// MOSTRAR LAS LIGAS DE UN DEPORTE
+
+function mostrarLigas(deporte) {
+    let html = `
+        <h2>${deporte}</h2>
+        <p>Elige una competición:</p>
+    `;
+
+    deportes[deporte].forEach(liga => {
+        html += `
+            <div class="panel">
+                <button onclick="mostrarClasificacion('${liga}')">
+                    ${liga} →
+                </button>
+            </div>
+        `;
+    });
+
+    html += `<button onclick="inicio()">Volver</button>`;
+
+    document.getElementById("contenido").innerHTML = html;
+}
+
+
+// MOSTRAR CLASIFICACIÓN
+
+ function mostrarClasificacion(liga) {
+    ligaActual = liga;
+
+    let lista = equipos[liga] || [
+        "Participante 1",
+        "Participante 2",
+        "Participante 3",
+        "Participante 4"
+    ];
+
+    let html = `
+        <h2>Clasificación: ${liga}</h2>
+        <p>Temporada 2026-2027</p>
+        <p class="small">
+            Tabla de demostración. No son posiciones ni puntos reales.
+        </p>
+
+        <div class="panel">
+        <table>
+            <tr>
+                <th>Pos.</th>
+                <th>Equipo</th>
+                <th>Puntos</th>
+                <th>⭐</th>
+            </tr>
+    `;
+
+    lista.forEach((equipo, i) => {
+        let marcado = favoritos.includes(equipo);
+
+        html += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${equipo}</td>
+                <td>—</td>
+                <td>
+                    <button class="${marcado ? "favorite" : ""}"
+                    onclick="cambiarFavorito('${equipo}')">
+                        ${marcado ? "★" : "☆"}
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    html += `
+        </table>
+        </div>
+        <button onclick="verFavoritos()">Ver favoritos</button>
+        <button onclick="inicio()">Inicio</button>
+    `;
+
+    document.getElementById("contenido").innerHTML = html;
+}
+
+// AÑADIR O QUITAR UN EQUIPO FAVORITO
+
+function cambiarFavorito(equipo) {
+    if (favoritos.includes(equipo)) {
+        favoritos = favoritos.filter(e => e !== equipo);
+    } else {
+        favoritos.push(equipo);
+    }
+
+    guardarFavoritos();
+    mostrarClasificacion(ligaActual);
+}
+
+// PESTAÑA DE FAVORITOS
+
+function verFavoritos() {
+    let html = `
+        <h2>⭐ Mis favoritos</h2>
+        <p>Estos son tus equipos seleccionados:</p>
+    `;
+
+    if (favoritos.length === 0) {
+        html += `
+            <div class="panel">
+                Todavía no tienes equipos favoritos.
+                Entra en una clasificación y pulsa ☆.
+            </div>
+        `;
+    }
+
+    favoritos.forEach(equipo => {
+        html += `
+            <div class="panel">
+                <h3>⭐ ${equipo}</h3>
+                <p>Partidos de ${equipo}</p>
+                <p class="small">
+                    Los partidos reales aparecerán cuando conectemos
+                    GoalNow a una fuente de datos deportivos.
+                </p>
+                <button onclick="quitarFavorito('${equipo}')">
+                    Quitar de favoritos
+                </button>
+            </div>
+        `;
+    });
+
+    html += `<button onclick="inicio()">Volver al inicio</button>`;
+
+    document.getElementById("contenido").innerHTML = html;
+}
+
+
+function quitarFavorito(equipo) {
+    favoritos = favoritos.filter(e => e !== equipo);
+    guardarFavoritos();
+    verFavoritos();
+}
+
+
+// ABRIR LA PÁGINA AL INICIAR
+
+inicio();
+
+</script>
+
+</body>
+</html>
